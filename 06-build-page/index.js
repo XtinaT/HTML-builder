@@ -9,6 +9,7 @@ let data = '';
   try {
     await fsPromises.rm(path.join(__dirname, 'project-dist'), { force: true, recursive: true });
   await fsPromises.mkdir(path.join(__dirname, 'project-dist'), { recursive: true });
+  await fsPromises.mkdir(path.join(__dirname, 'project-dist', 'assets'), { recursive: true });
   await fsPromises.writeFile(path.join(__dirname, 'project-dist', 'style.css'), '', (err) => {
     if(err) throw err;
   });
@@ -16,6 +17,7 @@ let data = '';
     if(err) throw err;
   });
   createBundle();
+  copy(path.join(__dirname, 'assets'), path.join(__dirname, 'project-dist', 'assets'));
 } catch (err) {
   console.error(err);
 } 
@@ -42,17 +44,13 @@ async function createBundle() {
 } 
 };
 
-/*
-copy('files', 'files-copy');
 
 async function copy(directory, copyDirectory) {
   try {
-    await fsPromises.rm(path.join(__dirname, copyDirectory), { force: true, recursive: true });
-  await fsPromises.mkdir(path.join(__dirname, copyDirectory), { recursive: true });
-  const files = await readdir(path.join(__dirname,directory), {withFileTypes: true});
+  const files = await readdir(path.join(directory), {withFileTypes: true});
   for (let elem of files) {
     if (elem.isFile()) {
-      fs.copyFile(path.join(__dirname, directory,elem.name), path.join(__dirname, copyDirectory,elem.name), (err) => {
+      fs.copyFile(path.join(directory,elem.name), path.join(copyDirectory,elem.name), (err) => {
         if(err) throw err;
       });
     } else {
@@ -64,4 +62,4 @@ async function copy(directory, copyDirectory) {
   console.error(err);
 } 
 };
-*/
+
