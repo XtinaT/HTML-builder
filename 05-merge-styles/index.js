@@ -13,7 +13,7 @@ let data = '';
   });
   const files = await readdir(path.join(__dirname,'styles'), {withFileTypes: true});
   for (let elem of files) {
-    if (path.extname(path.join(__dirname, 'project-dist', elem.name))==='.css') {
+    if (path.extname(path.join(__dirname, 'styles', elem.name))==='.css') {
       const input = fs.createReadStream(path.join(__dirname,'styles', elem.name));
       const output = fs.createWriteStream(path.join(__dirname, 'project-dist', 'bundle.css'));
 
