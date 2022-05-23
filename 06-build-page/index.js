@@ -13,11 +13,10 @@ let data = '';
   await fsPromises.writeFile(path.join(__dirname, 'project-dist', 'style.css'), '', (err) => {
     if(err) throw err;
   });
-  await fsPromises.writeFile(path.join(__dirname, 'project-dist', 'index.html'), '', (err) => {
-    if(err) throw err;
-  });
+ 
   createBundle();
   copy(path.join(__dirname, 'assets'), path.join(__dirname, 'project-dist', 'assets'));
+  readTemplate();
 } catch (err) {
   console.error(err);
 } 
@@ -63,3 +62,26 @@ async function copy(directory, copyDirectory) {
 } 
 };
 
+async function readTemplate() {
+  try {
+    let components = [];
+    const files = await readdir(path.join(__dirname, 'components'), {withFileTypes: true});
+    for (let elem of files) {
+     components.push(path.parse(path.join(__dirname, 'components', elem.name)).name);
+    }
+
+      let index = await fsPromises.readFile(path.join(__dirname,'template.html'), 'utf-8');
+        for (let elem of components) {
+          let html = await fsPromises.readFile(path.join(__dirname, 'components', `${elem}.html`), 'utf-8');
+          index = index.replace(`{{${elem}}}`, html);
+         }
+         await fsPromises.writeFile(path.join(__dirname, 'project-dist', 'index.html'), index, (err) => {
+          if(err) throw err;
+        });
+
+
+    
+} catch (err) {
+  console.error(err);
+} 
+};
